@@ -1,5 +1,7 @@
 /build/
+/Servers/
 *.metadata
+*.recommenders
 *.git
 person_client/.project
 *.MF
