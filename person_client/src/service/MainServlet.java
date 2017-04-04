@@ -2,7 +2,8 @@ package service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.UUID;
+import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson.JSON;
 
-import bean.Student;
+import bean.Parameter;
+import controller.MainController;
 
 /**
  * Servlet implementation class MainServlet
@@ -27,6 +29,7 @@ public class MainServlet extends HttpServlet {
 	 * 2,数据库操作
 	 * 3,返回json数据
 	 */
+	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("do post!!!");
 		StringBuffer json = new StringBuffer();
@@ -38,11 +41,20 @@ public class MainServlet extends HttpServlet {
 		}
 		//	数据操作
 		System.out.println(json.toString());
+		Map<String,Object> params = JSON.parseObject(json.toString(), Map.class);
+		String service = (String) params.get("service");
+		Map<String,Object> data = (Map<String, Object>) params.get("data");
 		
-		Student s = new Student();
-		s.setName("guanyj");
-		s.setId(UUID.randomUUID().toString().replaceAll("-", ""));
-		String result = JSON.toJSONString(s);
+		Parameter parameter = new Parameter();
+		parameter.setParams(data);
+		String result = "";
+		try {
+			Method m = MainController.class.getDeclaredMethod(service, Parameter.class);
+			result = (String) m.invoke(new MainController(), parameter);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
 		
 		//	写
 		response.getOutputStream().write(result.getBytes());
