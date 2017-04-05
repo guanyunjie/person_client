@@ -24,22 +24,15 @@ public class MainServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.getWriter().append("Served at: ").append(request.getContextPath());
 	}
-	/**
-	 * 1,解析ajax传过来的json数据
-	 * 2,数据库操作
-	 * 3,返回json数据
-	 */
 	@SuppressWarnings("unchecked")
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("do post!!!");
 		StringBuffer json = new StringBuffer();
-		//	读
 		BufferedReader reader = request.getReader();
 		String line = "";
 		while ((line = reader.readLine()) != null) {
 			json.append(line);
 		}
-		//	数据操作
 		System.out.println(json.toString());
 		Map<String,Object> params = JSON.parseObject(json.toString(), Map.class);
 		String service = (String) params.get("service");
@@ -56,7 +49,6 @@ public class MainServlet extends HttpServlet {
 			e.printStackTrace();
 		} 
 		
-		//	写
 		response.getOutputStream().write(result.getBytes());
 	}
 }

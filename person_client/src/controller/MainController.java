@@ -35,4 +35,15 @@ public class MainController {
 		return JSON.toJSONString(result);
 	}
 	
+	/**
+	 * 
+	 * @param params
+	 * @return
+	 */
+	public String queryIcons(Parameter params){
+		Index index = new Index();
+		EntityBeanSet result = index.queryIcons(params);
+		return JSON.toJSONString(result);
+	}
+	
 }
